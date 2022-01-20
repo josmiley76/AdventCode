@@ -1,30 +1,28 @@
 package advent.com;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.math.BigInteger;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ChallengeThreeTest {
-    @BeforeEach
-    public void setup(){
-        int[] binaryStateCountForOnes = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        int[] binaryStateCountForZeros = {0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0};
 
-        ChallengeThree.setBinaryStateCountForOnes(binaryStateCountForOnes);
-        ChallengeThree.setBinaryStateCountForZeros(binaryStateCountForZeros);
-
-    }
+        ChallengeThree challengeThree = new ChallengeThree();
 
     @Test
     public void ShouldCalculateBinaryStates(){
-        final int[] TEST_VALUES = { 2048,1024 ,512, 256, 128, 64, 32, 16, 9, 4, 3, 1};
+        final int [] TEST_VALUES = { 2048, 1024 ,512, 256, 128, 64, 32, 16, 9, 4, 3, 1};
         final int[] EXPECTED_BINARY_STATE_COUNT_FOR_ONES = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3};
         final int[] EXPECTED_BINARY_STATE_COUNT_FOR_ZEROS = {11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 9};
-        ChallengeThree.calculateBinaryStateCounts(TEST_VALUES);
-        assertArrayEquals(EXPECTED_BINARY_STATE_COUNT_FOR_ONES, ChallengeThree.getBinaryStateCountForOnes());
-        assertArrayEquals(EXPECTED_BINARY_STATE_COUNT_FOR_ZEROS, ChallengeThree.getBinaryStateCountForZeros());
+//        BigInteger[] testValuesAsBigInteger = Arrays.stream(TEST_VALUES)
+//                .mapToObj(BigInteger::valueOf)
+//                .toArray(BigInteger[]::new);
+        BigInteger[] testValuesAsBigInteger = Arrays.stream(TEST_VALUES).mapToObj(big -> BigInteger.valueOf(big)).toArray(BigInteger[]::new);
+        challengeThree.calculateBinaryStateCounts(testValuesAsBigInteger);
+        assertArrayEquals(EXPECTED_BINARY_STATE_COUNT_FOR_ONES, challengeThree.getBinaryStateCountForOnes());
+        assertArrayEquals(EXPECTED_BINARY_STATE_COUNT_FOR_ZEROS, challengeThree.getBinaryStateCountForZeros());
 
     }
 
@@ -33,8 +31,9 @@ class ChallengeThreeTest {
         final int GAMMA_RATE = 0x18;
         final int[] TEST_VALUES = {1032, 25, 22, 23, 8};
 
-        ChallengeThree.calculateBinaryStateCounts(TEST_VALUES);
-        assertEquals(GAMMA_RATE,ChallengeThree.calculateGammaRate());
+        BigInteger[] testValuesAsBigInteger = Arrays.stream(TEST_VALUES).mapToObj(big -> BigInteger.valueOf(big)).toArray(BigInteger[]::new);
+        challengeThree.calculateBinaryStateCounts(testValuesAsBigInteger);
+        assertEquals(GAMMA_RATE,challengeThree.calculateGammaRate());
     }
 
     @Test
@@ -42,8 +41,9 @@ class ChallengeThreeTest {
         final int EPSILON_RATE = 0xFE7;
         final int[] TEST_VALUES = {1032, 25, 22, 23, 8};
 
-        ChallengeThree.calculateBinaryStateCounts(TEST_VALUES);
-        assertEquals(EPSILON_RATE,ChallengeThree.calculateEpsilonRate());
+        BigInteger[] testValuesAsBigInteger = Arrays.stream(TEST_VALUES).mapToObj(big -> BigInteger.valueOf(big)).toArray(BigInteger[]::new);
+        challengeThree.calculateBinaryStateCounts(testValuesAsBigInteger);
+        assertEquals(EPSILON_RATE,challengeThree.calculateEpsilonRate());
     }
 
     @Test
@@ -51,8 +51,9 @@ class ChallengeThreeTest {
         final int[] TEST_VALUES = {1032, 25, 22, 23, 8};
         final int POWER_CONSUMPTION = 0x18 * 0xFE7;
 
-        ChallengeThree.calculateBinaryStateCounts(TEST_VALUES);
-        int powerConsumption = ChallengeThree.calculateGammaRate() * ChallengeThree.calculateEpsilonRate();
+        BigInteger[] testValuesAsBigInteger = Arrays.stream(TEST_VALUES).mapToObj(big -> BigInteger.valueOf(big)).toArray(BigInteger[]::new);
+        challengeThree.calculateBinaryStateCounts(testValuesAsBigInteger);
+        int powerConsumption = challengeThree.calculateGammaRate() * challengeThree.calculateEpsilonRate();
         assertEquals(POWER_CONSUMPTION, powerConsumption);
     }
 
