@@ -20,9 +20,7 @@ public class Main {
         System.out.println("Submarine Position = " + ChallengeTwo.getFinalSubmarinePosition());
 
         List<String> submarinePositionsList = challengeOne.readValuesFromFile("/Users/JDY22/AdventCode/src/advent/com/positions.txt");
-        int[] positionsAsIntegerArray = submarinePositionsList.stream().mapToInt(s -> Integer.parseInt(s)).toArray();
-//        BigInteger[] positionsAsIntegerArray = (BigInteger[]) submarinePositionsList.stream().map(s -> BigInteger.valueOf(Long.parseLong(s))).toArray();
-        ChallengeThree.calculateBinaryStateCounts(positionsAsIntegerArray);
+        ChallengeThree.calculateBinaryStateCounts(submarinePositionsList);
         System.out.println("Power Consumption = " + ChallengeThree.calculateGammaRate() * ChallengeThree.calculateEpsilonRate());
     }
 }
