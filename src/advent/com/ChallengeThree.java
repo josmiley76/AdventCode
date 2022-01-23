@@ -1,10 +1,14 @@
 package advent.com;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ChallengeThree {
 
-    private static final int [] BITS_TO_TEST = {0x800, 0x400, 0x200, 0x100, 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
+    private static final int[] BITS_TO_TEST = {0x800, 0x400, 0x200, 0x100, 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
+
+    private static int[] binaryStateCountForOnes;
+    private static int[] binaryStateCountForZeros;
 
     public static int[] getBinaryStateCountForOnes() {
         return binaryStateCountForOnes;
@@ -14,26 +18,12 @@ public class ChallengeThree {
         return binaryStateCountForZeros;
     }
 
-    private static int[] binaryStateCountForOnes = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    private static int[] binaryStateCountForZeros = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    public static void calculateBinaryStateCounts(List<String> valuesForCalculation) {
+        binaryStateCountForOnes = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        binaryStateCountForZeros = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-
-//    public static void calculateBinaryStateCounts( int [] valuesForCalculation){
-//        for(int index = 0; index < binaryStateCountForOnes.length; index ++){
-//            for(int bit = 0 ; bit < BITS_TO_TEST.length; bit++) {
-//                int bitwiseValue = valuesForCalculation[index] & BITS_TO_TEST[bit];
-//                if(bitwiseValue == BITS_TO_TEST[bit]){
-//                    binaryStateCountForOnes[bit]++;
-//                }else{
-//                    binaryStateCountForZeros[bit]++;
-//                }
-//            }
-//        }
-//    }
-
-    public static void calculateBinaryStateCounts( List<String> valuesForCalculation){
-        for(String valueAsString : valuesForCalculation){
-            for( int bitIndex = 0; bitIndex < valueAsString.length(); bitIndex ++){
+        for (String valueAsString : valuesForCalculation) {
+            for (int bitIndex = 0; bitIndex < valueAsString.length(); bitIndex++) {
                 if ((Character.getNumericValue(valueAsString.charAt(bitIndex)) == 1)) {
                     binaryStateCountForOnes[bitIndex]++;
                 } else {
@@ -43,25 +33,61 @@ public class ChallengeThree {
         }
     }
 
-    public static int calculateGammaRate(){
+    public static int calculateGammaRate() {
         int gammaRate = 0;
 
-        for(int bit = 0; bit < BITS_TO_TEST.length; bit++){
-            if(binaryStateCountForOnes[bit] > binaryStateCountForZeros[bit]){
-                gammaRate = gammaRate |  (0x800 >> bit);
+        for (int bit = 0; bit < BITS_TO_TEST.length; bit++) {
+            if (binaryStateCountForOnes[bit] > binaryStateCountForZeros[bit]) {
+                gammaRate = gammaRate | (0x800 >> bit);
             }
         }
         return gammaRate;
     }
 
-    public static int calculateEpsilonRate(){
+    public static int calculateEpsilonRate() {
         int epsilonRate = 0;
 
-        for(int bit = 0; bit < BITS_TO_TEST.length; bit++){
-            if(binaryStateCountForOnes[bit] < binaryStateCountForZeros[bit]){
-                epsilonRate = epsilonRate |  (0x800 >> bit);
+        for (int bit = 0; bit < BITS_TO_TEST.length; bit++) {
+            if (binaryStateCountForOnes[bit] < binaryStateCountForZeros[bit]) {
+                epsilonRate = epsilonRate | (0x800 >> bit);
             }
         }
         return epsilonRate;
+    }
+
+    public static long calculateOxygenGeneratorRating(List<String> valuesForCalculation) {
+        List<String> validValues = valuesForCalculation;
+        int bitIndex = 0;
+
+        do{
+            ChallengeThree.calculateBinaryStateCounts(validValues);
+            int bitValue = Integer.parseInt((binaryStateCountForOnes[bitIndex] >= binaryStateCountForZeros[bitIndex]) ? "1" : "0");
+            int finalBitIndex = bitIndex;
+
+            validValues = validValues.stream().filter(value -> Character.getNumericValue(value.charAt(finalBitIndex)) == bitValue)
+                    .collect(Collectors.toList());
+            bitIndex++;
+        }
+        while ((validValues.size() != 1) && (bitIndex < binaryStateCountForOnes.length));
+
+        return Long.parseLong(validValues.get(0),2);
+    }
+
+    public static long calculateCO2ScrubberRating(List<String> valuesForCalculation) {
+        List<String> validValues = valuesForCalculation;
+        int bitIndex = 0;
+
+        do{
+            ChallengeThree.calculateBinaryStateCounts(validValues);
+            int bitValue = Integer.parseInt(((binaryStateCountForOnes[bitIndex] > 0) && (binaryStateCountForOnes[bitIndex] < binaryStateCountForZeros[bitIndex])) ? "1" : "0");
+            int finalBitIndex = bitIndex;
+
+            validValues = validValues.stream().filter(value -> Character.getNumericValue(value.charAt(finalBitIndex)) == bitValue)
+                    .collect(Collectors.toList());
+            bitIndex++;
+        }
+        while ((validValues.size() != 1) && (bitIndex < binaryStateCountForOnes.length));
+
+        return Long.parseLong(validValues.get(0), 2);
     }
 }

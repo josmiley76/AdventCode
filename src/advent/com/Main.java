@@ -22,5 +22,7 @@ public class Main {
         List<String> submarinePositionsList = challengeOne.readValuesFromFile("/Users/JDY22/AdventCode/src/advent/com/positions.txt");
         ChallengeThree.calculateBinaryStateCounts(submarinePositionsList);
         System.out.println("Power Consumption = " + ChallengeThree.calculateGammaRate() * ChallengeThree.calculateEpsilonRate());
+        ChallengeThree.calculateBinaryStateCounts(submarinePositionsList);
+        System.out.println("Life Support Rating = " + ChallengeThree.calculateCO2ScrubberRating(submarinePositionsList) * ChallengeThree.calculateOxygenGeneratorRating(submarinePositionsList));
     }
 }

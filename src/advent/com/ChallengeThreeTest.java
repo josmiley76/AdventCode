@@ -1,7 +1,5 @@
 package advent.com;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -49,6 +47,24 @@ class ChallengeThreeTest {
         ChallengeThree.calculateBinaryStateCounts(TEST_VALUES);
         int powerConsumption = ChallengeThree.calculateGammaRate() * ChallengeThree.calculateEpsilonRate();
         assertEquals(POWER_CONSUMPTION, powerConsumption);
+    }
+
+    @Test
+    public void ShouldCalculateOxygenGeneratorRating(){
+        final List<String> TEST_VALUES = Arrays.asList("000000010010", "000000011001", "000000010110", "000000010111", "000000001000");
+        final long OXYGEN_GENERATOR_VALUE = 23;
+
+        long oxygenGeneratorValue = ChallengeThree.calculateOxygenGeneratorRating(TEST_VALUES);
+        assertEquals(OXYGEN_GENERATOR_VALUE, oxygenGeneratorValue);
+    }
+
+    @Test
+    public void ShouldCalculateCO2ScrubberRating(){
+        final List<String> TEST_VALUES = Arrays.asList("000000010010", "000000011001", "000000010110", "000000010111", "000000001000");
+        final long CO2_SCRUBBER_RATING = 8;
+
+        long  co2ScrubberRating = ChallengeThree.calculateCO2ScrubberRating(TEST_VALUES);
+        assertEquals(CO2_SCRUBBER_RATING, co2ScrubberRating);
     }
 
 }
