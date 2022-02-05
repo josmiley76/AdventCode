@@ -37,10 +37,10 @@ public class ChallengeFour {
         return line;
     }
 
-    public List<Map<Integer, Boolean>> readBingoCardsFromFile(String fileValues, String seperatorPattern) {
+    public List<LinkedHashMap<Integer, Boolean>> readBingoCardsFromFile(String fileValues, String seperatorPattern) {
         BufferedReader bufReader;
-        ArrayList<Map<Integer, Boolean>> listOfMaps = new ArrayList<>();
-        Map<Integer, Boolean> bingoMap = new HashMap<>();;
+        ArrayList<LinkedHashMap<Integer, Boolean>> listOfMaps = new ArrayList<>();
+        LinkedHashMap<Integer, Boolean> bingoMap = new LinkedHashMap<>();
 
         int linecount = 1;
 

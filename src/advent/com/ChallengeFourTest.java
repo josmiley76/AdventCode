@@ -2,8 +2,8 @@ package advent.com;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,7 +32,7 @@ class ChallengeFourTest {
 
         ChallengeFour challengeFour = new ChallengeFour();
 
-        List<Map<Integer, Boolean>> bingoCards = challengeFour.readBingoCardsFromFile(TEST_DATA_FILE, "");
+        List<LinkedHashMap<Integer, Boolean>> bingoCards = challengeFour.readBingoCardsFromFile(TEST_DATA_FILE, "");
         int actualNumberOfBingoCards = bingoCards.size();
 
         assertEquals(NUMBER_OF_BINGO_CARDS, actualNumberOfBingoCards);
