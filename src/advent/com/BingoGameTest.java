@@ -1,5 +1,6 @@
 package advent.com;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -16,6 +17,7 @@ class BingoGameTest {
 
     private static LinkedHashMap<Integer, Boolean> BINGO_CARD; 
     private static LinkedHashMap<Integer, Boolean> BINGO_CARD_TWO; 
+
 
     static{
         LinkedHashMap<Integer, Boolean> myCard = new LinkedHashMap<>();
@@ -37,15 +39,22 @@ class BingoGameTest {
         BINGO_CARD_TWO = new LinkedHashMap<>(myCard);
     }
 
+    @BeforeEach
+    public void setup(){
+        resetBingoCard(BINGO_CARD);
+        resetBingoCard(BINGO_CARD_TWO);
+    }
+
 
     @Test
-    public void shouldSetFlagWhenNumberCalled(){
+    public void shouldSetNumbersAsCalledDuringBingoGame(){
         List<LinkedHashMap<Integer, Boolean>> bingoCards = List.of(BINGO_CARD);
-        BingoGame bingoGame = new BingoGame();
+        BingoGame bingoGame = new BingoGame(bingoCards, BINGO_NUMBERS);
+
+        bingoGame.playBingo();
 
         BINGO_NUMBERS.forEach(number ->{
-            bingoGame.setFlagForBingoNumberAndCheckForWin(bingoCards, number);
-            assertTrue(BINGO_CARD.get(number));
+            assertTrue(bingoCards.get(0).get(number));
         });
 
     }
@@ -53,12 +62,10 @@ class BingoGameTest {
     @Test
     public void shouldSetBingoWinWhenRowComplete(){
         List<LinkedHashMap<Integer, Boolean>> bingoCards = List.of(BINGO_CARD);
-        BingoGame bingoGame = new BingoGame();
-        int winningBingoCard = -1;
+        BingoGame bingoGame = new BingoGame(bingoCards, BINGO_NUMBERS_ROW_WINS);
 
-        for(int number : BINGO_NUMBERS_ROW_WINS){
-            winningBingoCard = bingoGame.setFlagForBingoNumberAndCheckForWin(bingoCards, number);
-        }
+        int winningBingoCard = bingoGame.playBingo();
+
         assertEquals(BINGO_CARD_ONE_WINS, winningBingoCard);
 
 
@@ -67,12 +74,10 @@ class BingoGameTest {
     @Test
     public void shouldSetBingoWinWhenColumnComplete(){
         List<LinkedHashMap<Integer, Boolean>> bingoCards = List.of(BINGO_CARD);
-        BingoGame bingoGame = new BingoGame();
-        int winningBingoCard = -1;
+        BingoGame bingoGame = new BingoGame(bingoCards, BINGO_NUMBERS_COLUMN_WINS);
 
-        for(int number : BINGO_NUMBERS_COLUMN_WINS){
-            winningBingoCard = bingoGame.setFlagForBingoNumberAndCheckForWin(bingoCards, number);
-        }
+        int winningBingoCard = bingoGame.playBingo();
+
         assertEquals(BINGO_CARD_ONE_WINS, winningBingoCard);
 
     }
@@ -80,12 +85,10 @@ class BingoGameTest {
     @Test
     public void shouldSetBingoWinWhenRowCompleteOnBoardTwo(){
         List<LinkedHashMap<Integer, Boolean>> bingoCards = List.of(BINGO_CARD, BINGO_CARD_TWO);
-        BingoGame bingoGame = new BingoGame();
-        int winningBingoCard = -1;
+        BingoGame bingoGame = new BingoGame(bingoCards, BINGO_NUMBERS_CARDTWO_ROW_WINS);
 
-        for(int number : BINGO_NUMBERS_CARDTWO_ROW_WINS){
-            winningBingoCard = bingoGame.setFlagForBingoNumberAndCheckForWin(bingoCards, number);
-        }
+        int winningBingoCard = bingoGame.playBingo();
+
         assertEquals(BINGO_CARD_TWO_WINS, winningBingoCard);
 
     }
@@ -94,15 +97,15 @@ class BingoGameTest {
     public void shouldCalculateScoreUsingBoardTwoWithNumberFour(){
         int expectedBingoTotal = 800 * 4;
         List<LinkedHashMap<Integer, Boolean>> bingoCards = List.of(BINGO_CARD, BINGO_CARD_TWO);
-        BingoGame bingoGame = new BingoGame();
-        int winningBingoCard = -1;
+        BingoGame bingoGame = new BingoGame(bingoCards, BINGO_NUMBERS_CARDTWO_ROW_WINS);
 
-        for(int number : BINGO_NUMBERS_CARDTWO_ROW_WINS){
-            winningBingoCard = bingoGame.setFlagForBingoNumberAndCheckForWin(bingoCards, number);
-        }
+        int winningBingoCard = bingoGame.playBingo();
 
-        int actualBingoTotal = bingoGame.calculateScoreOfWinningBingoCard(BINGO_CARD_TWO, 4);
+        int actualBingoTotal = bingoGame.calculateWinningScore(bingoCards.get(winningBingoCard));
         assertEquals(expectedBingoTotal, actualBingoTotal);
     }
 
+    private void resetBingoCard( LinkedHashMap<Integer, Boolean> bingoCard){
+        bingoCard.replaceAll((n, v) -> Boolean.FALSE);
+    }
 }

@@ -2,16 +2,41 @@ package advent.com;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class BingoGame {
 
     private static final int NUMBER_OF_ROWS_AND_COLUMNS = 5;
     private static final int NO_WINNER = -1;
 
-    public int setFlagForBingoNumberAndCheckForWin(List<LinkedHashMap<Integer, Boolean>> bingoCards, int number) {
+    private List<LinkedHashMap<Integer, Boolean>> bingoCards;
+    private List<Integer> bingoNumbers;
+    private int lastNumberCalled = 0;
 
-//        int winningbingoCard = NO_WINNER;
+    public BingoGame(List<LinkedHashMap<Integer, Boolean>> bingoCards, List<Integer> bingoNumbers) {
+        this.bingoCards = bingoCards;
+        this.bingoNumbers = bingoNumbers;
+    }
+
+    public int playBingo(){
+        int winningBingoCard = NO_WINNER;
+
+        for(int bingoNumber : bingoNumbers){
+            winningBingoCard = setFlagForBingoNumberAndCheckForWin(bingoCards, bingoNumber);
+            if (winningBingoCard != NO_WINNER){
+                lastNumberCalled = bingoNumber;
+                return winningBingoCard;
+            }
+        }
+        return  winningBingoCard;
+    }
+
+    public int calculateWinningScore(LinkedHashMap<Integer, Boolean> winningBingoCard){
+
+        int totalOfUncalledNumbers = winningBingoCard.entrySet().stream().filter(number -> Boolean.FALSE.equals(number.getValue())).map(Map.Entry::getKey).reduce(0, Integer::sum);
+        return totalOfUncalledNumbers * lastNumberCalled;
+    }
+
+    private int setFlagForBingoNumberAndCheckForWin(List<LinkedHashMap<Integer, Boolean>> bingoCards, int number) {
 
         for (Map<Integer, Boolean> bingoCard : bingoCards) {
             List<Integer> bingoNumbersSoFarInRows = new ArrayList<>();
@@ -35,12 +60,6 @@ public class BingoGame {
             }
         }
         return NO_WINNER;
-    }
-
-    public int calculateScoreOfWinningBingoCard(Map<Integer, Boolean
-            > bingoCard, int lastNumberCalled){
-        int totalOfUncalledNumbers = bingoCard.entrySet().stream().filter(number -> Boolean.FALSE.equals(number.getValue())).map(Map.Entry::getKey).reduce(0, Integer::sum);
-        return totalOfUncalledNumbers * lastNumberCalled;
     }
 }
 

@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class ChallengeFourTest {
@@ -47,16 +46,14 @@ class ChallengeFourTest {
     public void bingoCardOneShouldWin(){
 
         ChallengeFour challengeFour = new ChallengeFour();
-        BingoGame bingoGame = new BingoGame();
-        int winningBingoCard = NO_WINNERS;
 
         List<Integer> bingoNumbers = challengeFour.readBingoNumbersFromFile(TEST_DATA_FILE);
         List<LinkedHashMap<Integer, Boolean>> bingoCards = challengeFour.readBingoCardsFromFile(TEST_DATA_FILE, "");
 
-        for(int bingoNumber : bingoNumbers){
-            winningBingoCard = bingoGame.setFlagForBingoNumberAndCheckForWin(bingoCards, bingoNumber);
-            if (winningBingoCard != NO_WINNERS) break;
-        }
+        BingoGame bingoGame = new BingoGame(bingoCards, bingoNumbers);
+
+        int winningBingoCard = bingoGame.playBingo();
+
         assertEquals(WINNING_BINGO_CARD, winningBingoCard);
 
     }
@@ -64,24 +61,18 @@ class ChallengeFourTest {
     @Test void shouldCalculateWinningScore(){
 
         ChallengeFour challengeFour = new ChallengeFour();
-        BingoGame bingoGame = new BingoGame();
-        int winningBingoCard = NO_WINNERS;
-        int lastNumberCalled = 1;
 
         List<Integer> bingoNumbers = challengeFour.readBingoNumbersFromFile(TEST_DATA_FILE);
         List<LinkedHashMap<Integer, Boolean>> bingoCards = challengeFour.readBingoCardsFromFile(TEST_DATA_FILE, "");
 
-        for(int bingoNumber : bingoNumbers){
-            winningBingoCard = bingoGame.setFlagForBingoNumberAndCheckForWin(bingoCards, bingoNumber);
-            if (winningBingoCard != NO_WINNERS) {
-                lastNumberCalled = bingoNumber;
-                break;
-            }
-        }
+        BingoGame bingoGame = new BingoGame(bingoCards, bingoNumbers);
+
+        int winningBingoCard = bingoGame.playBingo();
+
         if (winningBingoCard != NO_WINNERS)
-            assertEquals(WINNING_BINGO_SCORE, bingoGame.calculateScoreOfWinningBingoCard(bingoCards.get(winningBingoCard), lastNumberCalled));
+            assertEquals(WINNING_BINGO_SCORE, bingoGame.calculateWinningScore(bingoCards.get(winningBingoCard)));
         else
-            assertFalse(true);
+            fail();
     }
 
 

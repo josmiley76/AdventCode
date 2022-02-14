@@ -10,7 +10,6 @@ public class Main {
     public static void main(String[] args) {
         ChallengeOne challengeOne = new ChallengeOne();
         final int NO_WINNER = -1;
-        int lastNumberCalled = 1;
 
         List<String> testValueList = challengeOne.readValuesFromFile("/Users/JDY22/AdventCode/src/advent/com/file.txt");
         System.out.println(testValueList.size());
@@ -29,21 +28,17 @@ public class Main {
         System.out.println("Life Support Rating = " + ChallengeThree.calculateCO2ScrubberRating(submarinePositionsList) * ChallengeThree.calculateOxygenGeneratorRating(submarinePositionsList));
 
         ChallengeFour challengeFour = new ChallengeFour();
-        BingoGame bingoGame = new BingoGame();
+
 
         List<Integer> bingoNumbers = challengeFour.readBingoNumbersFromFile("/Users/JDY22/AdventCode/src/advent/com/bingo.txt");
         List<LinkedHashMap<Integer, Boolean>> bingoCards = challengeFour.readBingoCardsFromFile("/Users/JDY22/AdventCode/src/advent/com/bingo.txt", "");
 
-        int winningBingoCard = NO_WINNER;
-        for(int bingoNumber : bingoNumbers){
-            winningBingoCard = bingoGame.setFlagForBingoNumberAndCheckForWin(bingoCards, bingoNumber);
-            if (winningBingoCard != NO_WINNER){
-                lastNumberCalled = bingoNumber;
-                break;
-            }
-        }
+        BingoGame bingoGame = new BingoGame(bingoCards, bingoNumbers);
+
+        int winningBingoCard = bingoGame.playBingo();
+
         if (winningBingoCard != NO_WINNER){
-            System.out.println("Winning Bingo Card Total = " + bingoGame.calculateScoreOfWinningBingoCard(bingoCards.get(winningBingoCard), lastNumberCalled));
+            System.out.println("Winning Bingo Card Total = " + bingoGame.calculateWinningScore(bingoCards.get(winningBingoCard)));
         }
     }
 }
