@@ -39,7 +39,7 @@ public class ChallengeFour {
 
     public List<LinkedHashMap<Integer, Boolean>> readBingoCardsFromFile(String fileValues, String seperatorPattern) {
         BufferedReader bufReader;
-        ArrayList<LinkedHashMap<Integer, Boolean>> listOfMaps = new ArrayList<>();
+        List<LinkedHashMap<Integer, Boolean>> listOfMaps = new ArrayList<>();
         LinkedHashMap<Integer, Boolean> bingoMap = new LinkedHashMap<>();
 
         int linecount = 1;
@@ -50,18 +50,19 @@ public class ChallengeFour {
                 String line = bufReader.readLine();
                 while (line != null) {
                     if(!line.contains(",") && !seperatorPattern.equals(line)){
-                        bingoMap.putAll(Arrays.stream(line.split(WHITE_SPACE))
-                                       .filter(value -> !EMPTY_STRING.equals(value))
-                                       .peek(System.out::println)
-                                       .map(Integer::parseInt)
-                                       .collect(Collectors.toMap(p -> p, p -> Boolean.TRUE)));
+                        LinkedHashMap<Integer, Boolean> tmpbingoMap = Arrays.stream(line.split(WHITE_SPACE))
+                                         .filter(value -> !EMPTY_STRING.equals(value))
+                                         .map(Integer::parseInt)
+                                         .collect(LinkedHashMap::new, (map, item) -> map.put(item, Boolean.FALSE), Map :: putAll);
+                        bingoMap.putAll(tmpbingoMap);
                         if(linecount == Math.sqrt(BINGO_CARD_SIZE)){
                             listOfMaps.add(bingoMap);
+                            bingoMap = new LinkedHashMap<>();
+
                         }
                         linecount++;
                     }else{
                         linecount = 1;
-                        bingoMap.clear();
                     }
                     line = bufReader.readLine();
                 }
