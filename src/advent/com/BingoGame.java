@@ -44,15 +44,15 @@ public class BingoGame {
 
             Optional<Map.Entry<Integer, Boolean>> entryInMap =
                     bingoCard.entrySet().stream().filter(bingoEntry -> bingoEntry.getKey().equals(number)).findAny();
-            List<Integer> bingoNumbers = bingoCard.keySet().stream().collect(Collectors.toUnmodifiableList());
+            List<Integer> bingoNumbersForCard = bingoCard.keySet().stream().collect(Collectors.toUnmodifiableList());
             if (entryInMap.isPresent()) {
                 entryInMap.get().setValue(true);
-                Integer bingoNumberRow = bingoNumbers.indexOf(number) / NUMBER_OF_ROWS_AND_COLUMNS;
-                Integer bingoNumberColumn = bingoNumbers.indexOf(number) % NUMBER_OF_ROWS_AND_COLUMNS;
+                Integer bingoNumberRow = bingoNumbersForCard.indexOf(number) / NUMBER_OF_ROWS_AND_COLUMNS;
+                Integer bingoNumberColumn = bingoNumbersForCard.indexOf(number) % NUMBER_OF_ROWS_AND_COLUMNS;
 
-                bingoNumbersSoFarInRows.addAll(bingoCard.keySet().stream().filter(bingoNumber -> bingoNumberRow.equals(bingoNumbers.indexOf(bingoNumber) / NUMBER_OF_ROWS_AND_COLUMNS))
+                bingoNumbersSoFarInRows.addAll(bingoCard.keySet().stream().filter(bingoNumber -> bingoNumberRow.equals(bingoNumbersForCard.indexOf(bingoNumber) / NUMBER_OF_ROWS_AND_COLUMNS))
                                                         .filter(bingoNumber -> bingoCard.get(bingoNumber).equals(Boolean.TRUE)).collect(Collectors.toList()));
-                bingoNumbersSoFarInColumns.addAll(bingoCard.keySet().stream().filter(bingoNumber -> bingoNumberColumn.equals(bingoNumbers.indexOf(bingoNumber) % NUMBER_OF_ROWS_AND_COLUMNS))
+                bingoNumbersSoFarInColumns.addAll(bingoCard.keySet().stream().filter(bingoNumber -> bingoNumberColumn.equals(bingoNumbersForCard.indexOf(bingoNumber) % NUMBER_OF_ROWS_AND_COLUMNS))
                                                         .filter(bingoNumber -> bingoCard.get(bingoNumber).equals(Boolean.TRUE)).collect(Collectors.toList()));
                 if ((bingoNumbersSoFarInRows.size() == NUMBER_OF_ROWS_AND_COLUMNS) || (bingoNumbersSoFarInColumns.size() == NUMBER_OF_ROWS_AND_COLUMNS)) {
                     return bingoCards.indexOf(bingoCard);
