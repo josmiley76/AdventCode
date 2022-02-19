@@ -12,8 +12,11 @@ class BingoGameTest {
     private static final List<Integer> BINGO_NUMBERS_CARDTWO_ROW_WINS = List.of(44,35,8,25,96,4);
     private static final List<Integer> BINGO_NUMBERS_ROW_WINS = List.of(67,7,75,66,4);
     private static final List<Integer> BINGO_NUMBERS_COLUMN_WINS = List.of(67,35,58,55,38);
+    private static final List<Integer> BINGO_NUMBERS_FOR_ALL_CARDS_TO_WIN = List.of(67,75,9,66,4,44,35,8,25,96);
     private static final int BINGO_CARD_ONE_WINS = 0;
     private static final int BINGO_CARD_TWO_WINS = 1;
+    private static final int UNCALLED_NUMBER_TOTAL_FOR_LAST_WINNING_CARD = 791;
+    private static final int LAST_NUMBER_CALLED_FOR_LAST_CARD_TO_WIN = 96;
 
     private static LinkedHashMap<Integer, Boolean> BINGO_CARD; 
     private static LinkedHashMap<Integer, Boolean> BINGO_CARD_TWO; 
@@ -107,5 +110,17 @@ class BingoGameTest {
 
     private void resetBingoCard( LinkedHashMap<Integer, Boolean> bingoCard){
         bingoCard.replaceAll((n, v) -> Boolean.FALSE);
+    }
+
+    @Test
+    public void shouldFindLastWinningBingoCard(){
+        List<LinkedHashMap<Integer, Boolean>> bingoCards = List.of(BINGO_CARD, BINGO_CARD_TWO);
+        BingoGame bingoGame = new BingoGame(bingoCards, BINGO_NUMBERS_FOR_ALL_CARDS_TO_WIN);
+
+        int winningBingoCard = bingoGame.playBingoTillAllCardsHaveWon();
+
+        assertEquals(BINGO_CARD_TWO_WINS, winningBingoCard);
+        assertEquals(UNCALLED_NUMBER_TOTAL_FOR_LAST_WINNING_CARD * LAST_NUMBER_CALLED_FOR_LAST_CARD_TO_WIN, bingoGame.calculateWinningScore(bingoCards.get(winningBingoCard)));
+
     }
 }

@@ -17,6 +17,25 @@ public class BingoGame {
         this.bingoNumbers = bingoNumbers;
     }
 
+    public int playBingoTillAllCardsHaveWon(){
+        int winningBingoCard = NO_WINNER;
+        List<Integer> winningBingoCards = new ArrayList<>();
+
+        for(int bingoNumber : bingoNumbers){
+            winningBingoCard = setFlagForBingoNumberAndCheckForWin(bingoCards, bingoNumber);
+            if (winningBingoCard != NO_WINNER){
+                if (!winningBingoCards.contains(winningBingoCard)){
+                    winningBingoCards.add(winningBingoCard);
+                }
+                lastNumberCalled = bingoNumber;
+                if (winningBingoCards.size() == bingoCards.size()){
+                    return winningBingoCard;
+                }
+            }
+        }
+        return winningBingoCards.isEmpty()? winningBingoCard : winningBingoCards.get(winningBingoCards.size()-1);
+    }
+
     public int playBingo(){
         int winningBingoCard = NO_WINNER;
 

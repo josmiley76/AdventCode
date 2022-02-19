@@ -40,5 +40,13 @@ public class Main {
         if (winningBingoCard != NO_WINNER){
             System.out.println("Winning Bingo Card Total = " + bingoGame.calculateWinningScore(bingoCards.get(winningBingoCard)));
         }
+
+        BingoGame bingoGameSquidWins = new BingoGame(bingoCards, bingoNumbers);
+
+        int lastWinningBingoCard = bingoGameSquidWins.playBingoTillAllCardsHaveWon();
+
+        if (lastWinningBingoCard != NO_WINNER){
+            System.out.println("Last Winning Bingo Card Total = " + bingoGame.calculateWinningScore(bingoCards.get(lastWinningBingoCard)));
+        }
     }
 }
