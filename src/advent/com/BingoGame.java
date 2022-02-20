@@ -1,6 +1,7 @@
 package advent.com;
 
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class BingoGame {
@@ -20,6 +21,8 @@ public class BingoGame {
     public int playBingo(){
         int winningBingoCard = NO_WINNER;
 
+        resetBingoCards(bingoCards);
+
         for(int bingoNumber : bingoNumbers){
             winningBingoCard = setFlagForBingoNumberAndCheckForWin(bingoCards, bingoNumber);
             if (winningBingoCard != NO_WINNER){
@@ -28,6 +31,24 @@ public class BingoGame {
             }
         }
         return  winningBingoCard;
+    }
+    public int findLastBingoCardToWinWhenAllNumbersHaveBeenCalled(){
+        int winningBingoCard = NO_WINNER;
+
+        resetBingoCards(bingoCards);
+
+        List<Integer> winningBingoCards = new ArrayList<>();
+
+        for(int bingoNumber : bingoNumbers){
+            winningBingoCard = setFlagForBingoNumberAndCheckForWin(bingoCards, bingoNumber);
+            if (winningBingoCard != NO_WINNER){
+                if (!winningBingoCards.contains(winningBingoCard)){
+                    winningBingoCards.add(winningBingoCard);
+                    lastNumberCalled = bingoNumber;
+                }
+            }
+        }
+        return  (winningBingoCards.isEmpty()? winningBingoCard : winningBingoCards.get(winningBingoCards.size()-1));
     }
 
     public int calculateWinningScore(LinkedHashMap<Integer, Boolean> winningBingoCard){
@@ -55,11 +76,21 @@ public class BingoGame {
                 bingoNumbersSoFarInColumns.addAll(bingoCard.keySet().stream().filter(bingoNumber -> bingoNumberColumn.equals(bingoNumbersForCard.indexOf(bingoNumber) % NUMBER_OF_ROWS_AND_COLUMNS))
                                                         .filter(bingoNumber -> bingoCard.get(bingoNumber).equals(Boolean.TRUE)).collect(Collectors.toList()));
                 if ((bingoNumbersSoFarInRows.size() == NUMBER_OF_ROWS_AND_COLUMNS) || (bingoNumbersSoFarInColumns.size() == NUMBER_OF_ROWS_AND_COLUMNS)) {
+                    System.out.println("bingoNumbersSoFarInColumns = " + bingoNumbersSoFarInColumns);
+                    System.out.println("bingoNumbersSoFarInRows = " + bingoNumbersSoFarInRows);
+                    System.out.println(bingoCards.indexOf(bingoCard)+ "\n");
+                    System.out.println(number + "\n");
                     return bingoCards.indexOf(bingoCard);
                 }
             }
         }
         return NO_WINNER;
+    }
+
+    private void resetBingoCards(List<LinkedHashMap<Integer, Boolean>> bingoCardsList) {
+        for (Map<Integer, Boolean> bingoCard : bingoCardsList) {
+            bingoCard.replaceAll((n, v) -> Boolean.FALSE);
+        }
     }
 }
 

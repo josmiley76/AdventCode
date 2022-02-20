@@ -30,15 +30,23 @@ public class Main {
         ChallengeFour challengeFour = new ChallengeFour();
 
 
-        List<Integer> bingoNumbers = challengeFour.readBingoNumbersFromFile("/Users/JDY22/AdventCode/src/advent/com/bingo.txt");
-        List<LinkedHashMap<Integer, Boolean>> bingoCards = challengeFour.readBingoCardsFromFile("/Users/JDY22/AdventCode/src/advent/com/bingo.txt", "");
+        List<Integer> bingoNumbers = challengeFour.readBingoNumbersFromFile("/Users/JDY22/AdventCode/src/advent/com/bingo_example.txt");
+        List<LinkedHashMap<Integer, Boolean>> bingoCards = challengeFour.readBingoCardsFromFile("/Users/JDY22/AdventCode/src/advent/com/bingo_example.txt", "");
 
-        BingoGame bingoGame = new BingoGame(bingoCards, bingoNumbers);
+//        BingoGame bingoGame = new BingoGame(bingoCards, bingoNumbers);
+//
+//        int winningBingoCard = bingoGame.playBingo();
+//
+//        if (winningBingoCard != NO_WINNER){
+//            System.out.println("Winning Bingo Card Total = " + bingoGame.calculateWinningScore(bingoCards.get(winningBingoCard)));
+//        }
 
-        int winningBingoCard = bingoGame.playBingo();
+        BingoGame squidAlwaysWinsBingoGame = new BingoGame(bingoCards, bingoNumbers);
 
-        if (winningBingoCard != NO_WINNER){
-            System.out.println("Winning Bingo Card Total = " + bingoGame.calculateWinningScore(bingoCards.get(winningBingoCard)));
+        int squidWinningBingoCard = squidAlwaysWinsBingoGame.findLastBingoCardToWinWhenAllNumbersHaveBeenCalled();
+
+        if (squidWinningBingoCard != NO_WINNER){
+            System.out.println("Squid Winning Bingo Card Total = " + squidAlwaysWinsBingoGame.calculateWinningScore(bingoCards.get(squidWinningBingoCard)));
         }
     }
 }

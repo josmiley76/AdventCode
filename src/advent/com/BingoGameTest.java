@@ -12,6 +12,10 @@ class BingoGameTest {
     private static final List<Integer> BINGO_NUMBERS_CARDTWO_ROW_WINS = List.of(44,35,8,25,96,4);
     private static final List<Integer> BINGO_NUMBERS_ROW_WINS = List.of(67,7,75,66,4);
     private static final List<Integer> BINGO_NUMBERS_COLUMN_WINS = List.of(67,35,58,55,38);
+    private static final List<Integer> BINGO_NUMBERS_FOR_ALL_CARDS_TO_HAVE_WON_ONCE = List.of(44,35,8,25,96,4,67,7,75,66,29);
+    private static final List<Integer> BINGO_NUMBERS_WHERE_TWO_CARDS_WIN_SIMULTANEOUSLY = List.of(44,35,8,25,96,67,7,75,66,29,4);
+    private static final int LAST_NUMBER_CALLED_FOR_ALL_CARDS_TO_HAVE_WON_ONCE = 66;
+    private static final int LAST_NUMBER_CALLED_FOR_MULTIPLE_CARDS_TO_WIN_WITH_LAST_NUMBER = 4;
     private static final int BINGO_CARD_ONE_WINS = 0;
     private static final int BINGO_CARD_TWO_WINS = 1;
 
@@ -107,5 +111,33 @@ class BingoGameTest {
 
     private void resetBingoCard( LinkedHashMap<Integer, Boolean> bingoCard){
         bingoCard.replaceAll((n, v) -> Boolean.FALSE);
+    }
+
+    @Test
+    public void shouldCalculateScoreForWhichBingoCardWonLastWhenAllNumbersHaveBeenCalled(){
+        int expectedBingoTotal = 915 * LAST_NUMBER_CALLED_FOR_ALL_CARDS_TO_HAVE_WON_ONCE;
+
+        List<LinkedHashMap<Integer, Boolean>> bingoCards = List.of(BINGO_CARD, BINGO_CARD_TWO);
+        BingoGame bingoGame = new BingoGame(bingoCards, BINGO_NUMBERS_FOR_ALL_CARDS_TO_HAVE_WON_ONCE);
+
+        int winningBingoCard = bingoGame.findLastBingoCardToWinWhenAllNumbersHaveBeenCalled();
+        int actualBingoTotal = bingoGame.calculateWinningScore(bingoCards.get(winningBingoCard));
+
+        assertEquals(expectedBingoTotal, winningBingoCard, actualBingoTotal);
+
+    }
+
+    @Test
+    public void shouldHandleCasesWhenMoreThanOneCardWinsWhenANumberIsCalled(){
+        int expectedBingoTotal = 1041 * LAST_NUMBER_CALLED_FOR_MULTIPLE_CARDS_TO_WIN_WITH_LAST_NUMBER;
+
+        List<LinkedHashMap<Integer, Boolean>> bingoCards = List.of(BINGO_CARD, BINGO_CARD_TWO);
+        BingoGame bingoGame = new BingoGame(bingoCards, BINGO_NUMBERS_WHERE_TWO_CARDS_WIN_SIMULTANEOUSLY);
+
+        int winningBingoCard = bingoGame.findLastBingoCardToWinWhenAllNumbersHaveBeenCalled();
+        int actualBingoTotal = bingoGame.calculateWinningScore(bingoCards.get(winningBingoCard));
+
+        assertEquals(expectedBingoTotal, winningBingoCard, actualBingoTotal);
+
     }
 }
