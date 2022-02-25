@@ -1,12 +1,12 @@
 package advent.com;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class BingoGame {
 
     class BingoGameHistory{
+        LinkedHashMap<Integer, Boolean> bingoCardAtTimeOfWin = new LinkedHashMap<Integer, Boolean>();
         Integer winningBingoCardIndex = NO_WINNER;
         Integer numberCalledToWin = NO_WINNER;
     }
@@ -17,7 +17,6 @@ public class BingoGame {
     private List<LinkedHashMap<Integer, Boolean>> bingoCards;
     private List<Integer> bingoNumbers;
     private List<BingoGameHistory> bingoGameHistoryList = new ArrayList<>();
-//    private int lastNumberCalled = 0;
 
     public BingoGame(List<LinkedHashMap<Integer, Boolean>> bingoCards, List<Integer> bingoNumbers) {
         this.bingoCards = bingoCards;
@@ -55,7 +54,7 @@ public class BingoGame {
 
     public int calculateWinningScore(BingoGameHistory winningBingoCardHistory){
 
-        int totalOfUncalledNumbers = bingoCards.get(winningBingoCardHistory.winningBingoCardIndex).entrySet().stream().filter(number -> Boolean.FALSE.equals(number.getValue())).map(Map.Entry::getKey).reduce(0, Integer::sum);
+        int totalOfUncalledNumbers = winningBingoCardHistory.bingoCardAtTimeOfWin.entrySet().stream().filter(number -> Boolean.FALSE.equals(number.getValue())).map(Map.Entry::getKey).reduce(0, Integer::sum);
         return totalOfUncalledNumbers * winningBingoCardHistory.numberCalledToWin;
     }
 
@@ -80,14 +79,10 @@ public class BingoGame {
                 bingoNumbersSoFarInColumns.addAll(bingoCard.keySet().stream().filter(bingoNumber -> bingoNumberColumn.equals(bingoNumbersForCard.indexOf(bingoNumber) % NUMBER_OF_ROWS_AND_COLUMNS))
                                                         .filter(bingoNumber -> bingoCard.get(bingoNumber).equals(Boolean.TRUE)).collect(Collectors.toList()));
                 if ((bingoNumbersSoFarInRows.size() == NUMBER_OF_ROWS_AND_COLUMNS) || (bingoNumbersSoFarInColumns.size() == NUMBER_OF_ROWS_AND_COLUMNS)) {
-                    System.out.println("bingoNumbersSoFarInColumns = " + bingoNumbersSoFarInColumns);
-                    System.out.println("bingoNumbersSoFarInRows = " + bingoNumbersSoFarInRows);
-                    System.out.println(bingoCards.indexOf(bingoCard)+ "\n");
-                    System.out.println(number + "\n");
-                    BingoGameHistory bingoGameHistory = new BingoGameHistory();
+                   BingoGameHistory bingoGameHistory = new BingoGameHistory();
                     bingoGameHistory.winningBingoCardIndex = bingoCards.indexOf(bingoCard);
                     bingoGameHistory.numberCalledToWin = number;
-//                    int bingoCardIndex = bingoCards.indexOf(bingoCard);
+                    bingoGameHistory.bingoCardAtTimeOfWin = new LinkedHashMap(bingoCards.get(bingoGameHistory.winningBingoCardIndex));
                     winningBingoCards.add(bingoGameHistory);
                 }
             }

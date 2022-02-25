@@ -115,7 +115,7 @@ class BingoGameTest {
 
     @Test
     public void shouldCalculateScoreForWhichBingoCardWonLastWhenAllNumbersHaveBeenCalled(){
-        int expectedBingoTotal = 915 * LAST_NUMBER_CALLED_FOR_ALL_CARDS_TO_HAVE_WON_ONCE;
+        int expectedBingoTotal = 944 * LAST_NUMBER_CALLED_FOR_ALL_CARDS_TO_HAVE_WON_ONCE;
 
         List<LinkedHashMap<Integer, Boolean>> bingoCards = List.of(BINGO_CARD, BINGO_CARD_TWO);
         BingoGame bingoGame = new BingoGame(bingoCards, BINGO_NUMBERS_FOR_ALL_CARDS_TO_HAVE_WON_ONCE);
