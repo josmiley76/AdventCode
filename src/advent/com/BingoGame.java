@@ -6,60 +6,64 @@ import java.util.stream.Collectors;
 
 public class BingoGame {
 
+    class BingoGameHistory{
+        Integer winningBingoCardIndex = NO_WINNER;
+        Integer numberCalledToWin = NO_WINNER;
+    }
+
     private static final int NUMBER_OF_ROWS_AND_COLUMNS = 5;
     private static final int NO_WINNER = -1;
 
     private List<LinkedHashMap<Integer, Boolean>> bingoCards;
     private List<Integer> bingoNumbers;
-    private int lastNumberCalled = 0;
+    private List<BingoGameHistory> bingoGameHistoryList = new ArrayList<>();
+//    private int lastNumberCalled = 0;
 
     public BingoGame(List<LinkedHashMap<Integer, Boolean>> bingoCards, List<Integer> bingoNumbers) {
         this.bingoCards = bingoCards;
         this.bingoNumbers = bingoNumbers;
     }
 
-    public int playBingo(){
-        int winningBingoCard = NO_WINNER;
-
+    public BingoGameHistory playBingo(){
         resetBingoCards(bingoCards);
 
         for(int bingoNumber : bingoNumbers){
-            winningBingoCard = setFlagForBingoNumberAndCheckForWin(bingoCards, bingoNumber);
-            if (winningBingoCard != NO_WINNER){
-                lastNumberCalled = bingoNumber;
-                return winningBingoCard;
+            List<BingoGameHistory> winningBingoCards = setFlagForBingoNumberAndCheckForWin(bingoCards, bingoNumber);
+            if (!winningBingoCards.isEmpty()){
+                return winningBingoCards.get(0);
             }
         }
-        return  winningBingoCard;
+        return  null;
     }
-    public int findLastBingoCardToWinWhenAllNumbersHaveBeenCalled(){
-        int winningBingoCard = NO_WINNER;
+
+    public BingoGameHistory findLastBingoCardToWinWhenAllNumbersHaveBeenCalled(){
 
         resetBingoCards(bingoCards);
 
-        List<Integer> winningBingoCards = new ArrayList<>();
-
         for(int bingoNumber : bingoNumbers){
-            winningBingoCard = setFlagForBingoNumberAndCheckForWin(bingoCards, bingoNumber);
-            if (winningBingoCard != NO_WINNER){
-                if (!winningBingoCards.contains(winningBingoCard)){
-                    winningBingoCards.add(winningBingoCard);
-                    lastNumberCalled = bingoNumber;
+            List<BingoGameHistory> winningBingoCards = setFlagForBingoNumberAndCheckForWin(bingoCards, bingoNumber);
+            if (!winningBingoCards.isEmpty()){
+                for(BingoGameHistory bingoCard : winningBingoCards){
+                    if (!bingoGameHistoryList.stream().filter(index -> index.winningBingoCardIndex.equals(bingoCard.winningBingoCardIndex)).findFirst().isPresent()){
+                        bingoGameHistoryList.add(bingoCard);
+                    }
                 }
             }
         }
-        return  (winningBingoCards.isEmpty()? winningBingoCard : winningBingoCards.get(winningBingoCards.size()-1));
+        return  (bingoGameHistoryList.isEmpty()? null: bingoGameHistoryList.get(bingoGameHistoryList.size()-1));
     }
 
-    public int calculateWinningScore(LinkedHashMap<Integer, Boolean> winningBingoCard){
+    public int calculateWinningScore(BingoGameHistory winningBingoCardHistory){
 
-        int totalOfUncalledNumbers = winningBingoCard.entrySet().stream().filter(number -> Boolean.FALSE.equals(number.getValue())).map(Map.Entry::getKey).reduce(0, Integer::sum);
-        return totalOfUncalledNumbers * lastNumberCalled;
+        int totalOfUncalledNumbers = bingoCards.get(winningBingoCardHistory.winningBingoCardIndex).entrySet().stream().filter(number -> Boolean.FALSE.equals(number.getValue())).map(Map.Entry::getKey).reduce(0, Integer::sum);
+        return totalOfUncalledNumbers * winningBingoCardHistory.numberCalledToWin;
     }
 
-    private int setFlagForBingoNumberAndCheckForWin(List<LinkedHashMap<Integer, Boolean>> bingoCards, int number) {
+    private List<BingoGameHistory> setFlagForBingoNumberAndCheckForWin(List<LinkedHashMap<Integer, Boolean>> bingoCards, int number) {
 
-        for (Map<Integer, Boolean> bingoCard : bingoCards) {
+        List<BingoGameHistory> winningBingoCards = new ArrayList<>();
+
+        for (LinkedHashMap<Integer, Boolean> bingoCard : bingoCards) {
             List<Integer> bingoNumbersSoFarInRows = new ArrayList<>();
             List<Integer> bingoNumbersSoFarInColumns = new ArrayList<>();
 
@@ -80,11 +84,15 @@ public class BingoGame {
                     System.out.println("bingoNumbersSoFarInRows = " + bingoNumbersSoFarInRows);
                     System.out.println(bingoCards.indexOf(bingoCard)+ "\n");
                     System.out.println(number + "\n");
-                    return bingoCards.indexOf(bingoCard);
+                    BingoGameHistory bingoGameHistory = new BingoGameHistory();
+                    bingoGameHistory.winningBingoCardIndex = bingoCards.indexOf(bingoCard);
+                    bingoGameHistory.numberCalledToWin = number;
+//                    int bingoCardIndex = bingoCards.indexOf(bingoCard);
+                    winningBingoCards.add(bingoGameHistory);
                 }
             }
         }
-        return NO_WINNER;
+        return winningBingoCards;
     }
 
     private void resetBingoCards(List<LinkedHashMap<Integer, Boolean>> bingoCardsList) {

@@ -68,9 +68,9 @@ class BingoGameTest {
         List<LinkedHashMap<Integer, Boolean>> bingoCards = List.of(BINGO_CARD);
         BingoGame bingoGame = new BingoGame(bingoCards, BINGO_NUMBERS_ROW_WINS);
 
-        int winningBingoCard = bingoGame.playBingo();
+        BingoGame.BingoGameHistory winningBingoCard = bingoGame.playBingo();
 
-        assertEquals(BINGO_CARD_ONE_WINS, winningBingoCard);
+        assertEquals(BINGO_CARD_ONE_WINS, winningBingoCard.winningBingoCardIndex);
 
 
     }
@@ -80,9 +80,9 @@ class BingoGameTest {
         List<LinkedHashMap<Integer, Boolean>> bingoCards = List.of(BINGO_CARD);
         BingoGame bingoGame = new BingoGame(bingoCards, BINGO_NUMBERS_COLUMN_WINS);
 
-        int winningBingoCard = bingoGame.playBingo();
+        BingoGame.BingoGameHistory winningBingoCard = bingoGame.playBingo();
 
-        assertEquals(BINGO_CARD_ONE_WINS, winningBingoCard);
+        assertEquals(BINGO_CARD_ONE_WINS, winningBingoCard.winningBingoCardIndex);
 
     }
 
@@ -91,9 +91,9 @@ class BingoGameTest {
         List<LinkedHashMap<Integer, Boolean>> bingoCards = List.of(BINGO_CARD, BINGO_CARD_TWO);
         BingoGame bingoGame = new BingoGame(bingoCards, BINGO_NUMBERS_CARDTWO_ROW_WINS);
 
-        int winningBingoCard = bingoGame.playBingo();
+        BingoGame.BingoGameHistory winningBingoCard = bingoGame.playBingo();
 
-        assertEquals(BINGO_CARD_TWO_WINS, winningBingoCard);
+        assertEquals(BINGO_CARD_TWO_WINS, winningBingoCard.winningBingoCardIndex);
 
     }
 
@@ -103,9 +103,9 @@ class BingoGameTest {
         List<LinkedHashMap<Integer, Boolean>> bingoCards = List.of(BINGO_CARD, BINGO_CARD_TWO);
         BingoGame bingoGame = new BingoGame(bingoCards, BINGO_NUMBERS_CARDTWO_ROW_WINS);
 
-        int winningBingoCard = bingoGame.playBingo();
+        BingoGame.BingoGameHistory winningBingoCard = bingoGame.playBingo();
 
-        int actualBingoTotal = bingoGame.calculateWinningScore(bingoCards.get(winningBingoCard));
+        int actualBingoTotal = bingoGame.calculateWinningScore(winningBingoCard);
         assertEquals(expectedBingoTotal, actualBingoTotal);
     }
 
@@ -120,24 +120,24 @@ class BingoGameTest {
         List<LinkedHashMap<Integer, Boolean>> bingoCards = List.of(BINGO_CARD, BINGO_CARD_TWO);
         BingoGame bingoGame = new BingoGame(bingoCards, BINGO_NUMBERS_FOR_ALL_CARDS_TO_HAVE_WON_ONCE);
 
-        int winningBingoCard = bingoGame.findLastBingoCardToWinWhenAllNumbersHaveBeenCalled();
-        int actualBingoTotal = bingoGame.calculateWinningScore(bingoCards.get(winningBingoCard));
+        BingoGame.BingoGameHistory winningBingoCard = bingoGame.findLastBingoCardToWinWhenAllNumbersHaveBeenCalled();
+        int actualBingoTotal = bingoGame.calculateWinningScore(winningBingoCard);
 
-        assertEquals(expectedBingoTotal, winningBingoCard, actualBingoTotal);
+        assertEquals(expectedBingoTotal, actualBingoTotal);
 
     }
 
     @Test
     public void shouldHandleCasesWhenMoreThanOneCardWinsWhenANumberIsCalled(){
-        int expectedBingoTotal = 1041 * LAST_NUMBER_CALLED_FOR_MULTIPLE_CARDS_TO_WIN_WITH_LAST_NUMBER;
+        int expectedBingoTotal = 771 * LAST_NUMBER_CALLED_FOR_MULTIPLE_CARDS_TO_WIN_WITH_LAST_NUMBER;
 
         List<LinkedHashMap<Integer, Boolean>> bingoCards = List.of(BINGO_CARD, BINGO_CARD_TWO);
         BingoGame bingoGame = new BingoGame(bingoCards, BINGO_NUMBERS_WHERE_TWO_CARDS_WIN_SIMULTANEOUSLY);
 
-        int winningBingoCard = bingoGame.findLastBingoCardToWinWhenAllNumbersHaveBeenCalled();
-        int actualBingoTotal = bingoGame.calculateWinningScore(bingoCards.get(winningBingoCard));
+        BingoGame.BingoGameHistory winningBingoCard = bingoGame.findLastBingoCardToWinWhenAllNumbersHaveBeenCalled();
+        int actualBingoTotal = bingoGame.calculateWinningScore(winningBingoCard);
 
-        assertEquals(expectedBingoTotal, winningBingoCard, actualBingoTotal);
+        assertEquals(expectedBingoTotal, actualBingoTotal);
 
     }
 }

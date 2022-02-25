@@ -52,9 +52,9 @@ class ChallengeFourTest {
 
         BingoGame bingoGame = new BingoGame(bingoCards, bingoNumbers);
 
-        int winningBingoCard = bingoGame.playBingo();
+        BingoGame.BingoGameHistory winningBingoCard = bingoGame.playBingo();
 
-        assertEquals(WINNING_BINGO_CARD, winningBingoCard);
+        assertEquals(WINNING_BINGO_CARD, winningBingoCard.winningBingoCardIndex);
 
     }
 
@@ -67,10 +67,10 @@ class ChallengeFourTest {
 
         BingoGame bingoGame = new BingoGame(bingoCards, bingoNumbers);
 
-        int winningBingoCard = bingoGame.playBingo();
+        BingoGame.BingoGameHistory winningBingoCard = bingoGame.playBingo();
 
-        if (winningBingoCard != NO_WINNERS)
-            assertEquals(WINNING_BINGO_SCORE, bingoGame.calculateWinningScore(bingoCards.get(winningBingoCard)));
+        if (winningBingoCard.winningBingoCardIndex != NO_WINNERS)
+            assertEquals(WINNING_BINGO_SCORE, bingoGame.calculateWinningScore(winningBingoCard));
         else
             fail();
     }
