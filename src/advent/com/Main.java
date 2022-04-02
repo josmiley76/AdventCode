@@ -1,5 +1,9 @@
 package advent.com;
 
+import advent.com.challengefive.ChallengeFive;
+import advent.com.challengefive.Vent;
+import advent.com.challengefive.VentCalculations;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -40,5 +44,9 @@ public class Main {
         if (winningBingoCard != NO_WINNER){
             System.out.println("Winning Bingo Card Total = " + bingoGame.calculateWinningScore(bingoCards.get(winningBingoCard)));
         }
+
+        List<Vent> ventsList = ChallengeFive.readVentDataFromFile("/Users/JDY22/AdventCode/src/advent/com/challengefive/ventData.txt", "-");
+
+        System.out.println("Number of Dangerous Vents is " + VentCalculations.calculateTotalDangerousPoints(ventsList));
     }
 }
